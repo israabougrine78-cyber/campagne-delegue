@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Israa - Campagne Délégué</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode.js/1.5.3/qrcode.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            padding: 0;
+            margin: 0;
+        }
+
+        /* FORMAT A4 */
+        .a4-page {
+            width: 210mm;
+            height: 297mm;
+            margin: 20px auto;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* HEADER - TOP */
+        .header {
+            background: linear-gradient(135deg, #e8b4d9 0%, #d9a8d9 100%);
+            border: 3px solid #333;
+            padding: 25px;
+            text-align: center;
+            border-radius: 0;
+        }
+
+        .header h1 {
+            font-size: 42px;
+            font-weight: 900;
+            color: #333;
+            margin: 0;
+            line-height: 1.1;
+        }
+
+        .header .subtitle {
+            font-size: 14px;
+            color: #555;
+            margin-top: 8px;
+            font-weight: 600;
+        }
+
+        .header .candidate-info {
+            font-size: 11px;
+            color: #666;
+            margin-top: 10px;
+            font-weight: 500;
+        }
+
+        /* MAIN CONTENT */
+        .content {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            padding: 25px;
+        }
+
+        /* LEFT SECTION */
+        .left-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .about-box {
+            background: linear-gradient(135deg, #f5d9e8 0%, #e8c4d9 100%);
+            border: 2px solid #333;
+            border-radius: 15px;
+            padding: 15px;
+            flex: 1;
+        }
+
+        .about-box h3 {
+            font-size: 14px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 8px;
+            border-bottom: 2px solid #333;
+            padding-bottom: 5px;
+        }
+
+        .about-box p {
+            font-size: 12px;
+            color: #555;
+            line-height: 1.4;
+            margin: 0;
+        }
+
+        .tagline {
+            background: linear-gradient(135deg, #d9e8f5 0%, #c4d9e8 100%);
+            border: 2px solid #333;
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .tagline p {
+            font-size: 14px;
+            font-weight: 700;
+            color: #333;
+            margin: 0;
+            font-style: italic;
+        }
+
+        /* RIGHT SECTION */
+        .right-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .profile-card {
+            background: linear-gradient(135deg, #e8b4d9 0%, #d9a8d9 100%);
+            border: 2px solid #333;
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .profile-card h2 {
+            font-size: 24px;
+            font-weight: 900;
+            color: #333;
+            margin: 0 0 3px 0;
+        }
+
+        .profile-card .position {
+            font-size: 11px;
+            font-weight: 600;
+            color: #555;
+            margin: 0;
+        }
+
+        .profile-card .deputy {
+            font-size: 10px;
+            color: #666;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid #d9a8d9;
+        }
+
+        .engagements-box {
+            background: linear-gradient(135deg, #e8d9f5 0%, #d9c4e8 100%);
+            border: 2px solid #333;
+            border-radius: 15px;
+            padding: 12px;
+            flex: 1;
+        }
+
+        .engagements-box h4 {
+            font-size: 12px;
+            font-weight: 700;
+            color: #333;
+            margin: 0 0 8px 0;
+            border-bottom: 2px solid #333;
+            padding-bottom: 5px;
+        }
+
+        .engagement-item {
+            font-size: 11px;
+            color: #555;
+            margin: 6px 0;
+            padding-left: 15px;
+            position: relative;
+        }
+
+        .engagement-item:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            font-weight: 700;
+            color: #d9a8d9;
+        }
+
+        /* QR SECTION */
+        .qr-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .qr-card {
+            background: linear-gradient(135deg, #f5e6f0 0%, #e6f0f5 100%);
+            border: 2px solid #333;
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .qr-card h5 {
+            font-size: 11px;
+            font-weight: 700;
+            color: #333;
+            margin: 0 0 8px 0;
+        }
+
+        .qr-code-wrapper {
+            background: white;
+            border: 1px solid #ddd;
+            padding: 8px;
+            border-radius: 8px;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+
+        #qr1, #qr2 {
+            width: 120px;
+            height: 120px;
+        }
+
+        .qr-description {
+            font-size: 9px;
+            color: #666;
+            line-height: 1.3;
+        }
+
+        /* FOOTER */
+        .footer {
+            background: linear-gradient(135deg, #e8b4d9 0%, #d9a8d9 100%);
+            border-top: 3px solid #333;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .footer p {
+            font-size: 12px;
+            font-weight: 700;
+            color: #333;
+            margin: 4px 0;
+        }
+
+        .vote-btn {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border: 2px solid #333;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 11px;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .vote-btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* MODAL SLIDESHOW */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: auto;
+            padding: 0;
+            border: 3px solid #333;
+            width: 90%;
+            height: 90%;
+            display: flex;
+            flex-direction: column;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            position: fixed;
+        }
+
+        .close {
+            color: #333;
+            float: right;
+            font-size: 32px;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 15px 25px;
+        }
+
+        .close:hover {
+            color: #f5576c;
+        }
+
+        .slideshow {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #e8b4d9 0%, #d9a8d9 100%);
+        }
+
+        .slide {
+            display: none;
+            width: 100%;
+            height: 100%;
+            color: white;
+            padding: 60px;
+            text-align: center;
+            animation: fadeIn 0.5s;
+        }
+
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .slide h2 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            font-weight: 900;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .slide-icon {
+            font-size: 80px;
+            margin-bottom: 30px;
+        }
+
+        .slide p {
+            font-size: 22px;
+            line-height: 1.6;
+            max-width: 700px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .slide-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background: #f5f5f5;
+            border-top: 2px solid #ddd;
+        }
+
+        .slide-nav button {
+            background: #333;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .slide-nav button:hover {
+            background: #f5576c;
+        }
+
+        .slide-counter {
+            font-weight: 700;
+            color: #333;
+            font-size: 16px;
+        }
+
+        @media print {
+            body {
+                background: white;
+                margin: 0;
+                padding: 0;
+            }
+            .a4-page {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                box-shadow: none;
+            }
+        }
+
+        @media (max-width: 1000px) {
+            .a4-page {
+                width: 100%;
+                height: auto;
+                margin: 0;
+                border-radius: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="a4-page">
+        <!-- HEADER -->
+        <div class="header">
+            <h1>Élection Délégués de la 1ère 8 en 2026</h1>
+            <p class="subtitle">Israâ Bougrine - Candidate Délégué</p>
+            <p class="candidate-info">Suppléante : Bubu Paris</p>
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <div class="content">
+            <!-- LEFT -->
+            <div class="left-section">
+                <div class="about-box">
+                    <h3>📋 À PROPOS</h3>
+                    <p>Je suis une élève dynamique et engagée. Je crois en la communication et l'action collective pour faire de notre classe un vrai espace d'échange.</p>
+                </div>
+
+                <div class="tagline">
+                    <p>💪 "Ensemble, changeons notre classe !"</p>
+                </div>
+
+                <div class="about-box">
+                    <h3>❤️ MES VALEURS</h3>
+                    <p>Transparence, écoute, respect et action. Je m'engage à être votre voix et à transformer vos idées en réalité.</p>
+                </div>
+            </div>
+
+            <!-- RIGHT -->
+            <div class="right-section">
+                <div class="engagements-box">
+                    <h4>📍 MES 5 ENGAGEMENTS</h4>
+                    <div class="engagement-item">🗣️ Vous Écouter</div>
+                    <div class="engagement-item">📱 Faire Remonter Vos Idées</div>
+                    <div class="engagement-item">📚 Suivre les Évaluations</div>
+                    <div class="engagement-item">🚀 Transformer les Idées</div>
+                    <div class="engagement-item">📢 Vous Tenir Informés</div>
+                    <button class="vote-btn" onclick="openSlideshow()">📊 Voir plus →</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- QR CODES -->
+        <div class="qr-section" style="padding: 0 25px 15px 25px;">
+            <div class="qr-card">
+                <h5>📚 Ajouter une Évaluation</h5>
+                <div class="qr-code-wrapper">
+                    <div id="qr1"></div>
+                </div>
+                <div class="qr-description">Scanne pour signaler un contrôle</div>
+            </div>
+
+            <div class="qr-card">
+                <h5>💭 Faire une Suggestion</h5>
+                <div class="qr-code-wrapper">
+                    <div id="qr2"></div>
+                </div>
+                <div class="qr-description">Scanne pour partager une idée</div>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="footer">
+            <p>❤️ Ensemble, faisons de cette année une belle aventure</p>
+            <p>Merci de votre confiance ! 🙏</p>
+        </div>
+    </div>
+
+    <!-- SLIDESHOW MODAL -->
+    <div id="slideshowModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeSlideshow()">&times;</span>
+            <div class="slideshow" id="slideshow">
+                <div class="slide active">
+                    <h2>Mon Pacte de Classe</h2>
+                    <p style="margin-top: 30px; font-size: 26px;">5 engagements pour une meilleure année ensemble</p>
+                </div>
+
+                <div class="slide">
+                    <div class="slide-icon">🗣️</div>
+                    <h2>Vous Écouter</h2>
+                    <p>Je serai présent(e) pour écouter vos préoccupations, vos idées et vos suggestions.<br><br>Vos voix comptent vraiment.</p>
+                </div>
+
+                <div class="slide">
+                    <div class="slide-icon">📱</div>
+                    <h2>Faire Remonter Vos Idées</h2>
+                    <p>Tout ce que vous me dites sera transmis aux professeurs et à l'administration<br><br>de manière constructive et respectueuse.</p>
+                </div>
+
+                <div class="slide">
+                    <div class="slide-icon">📚</div>
+                    <h2>Suivre les Évaluations</h2>
+                    <p>Je créerai un système pour tracker les contrôles et alerter<br><br>si la charge de travail devient trop importante.</p>
+                </div>
+
+                <div class="slide">
+                    <div class="slide-icon">🚀</div>
+                    <h2>Transformer les Idées en Actions</h2>
+                    <p>Je proposerai des projets et des événements pour améliorer<br><br>notre ambiance de classe et notre cohésion.</p>
+                </div>
+
+                <div class="slide">
+                    <div class="slide-icon">📢</div>
+                    <h2>Vous Tenir Informés</h2>
+                    <p>Je ferai des bilans réguliers sur les actions menées,<br><br>ce qui est réalisé et ce qui est en cours.</p>
+                </div>
+
+                <div class="slide">
+                    <h2>Prêt(e) à voter ?</h2>
+                    <p style="margin-top: 30px;">Ensemble, nous pouvons faire de cette année<br>une belle aventure.<br><br>Merci de votre confiance ! 🙏</p>
+                </div>
+            </div>
+            <div class="slide-nav">
+                <button onclick="prevSlide()">← Précédent</button>
+                <span class="slide-counter"><span id="currentSlide">1</span> / <span id="totalSlides">7</span></span>
+                <button onclick="nextSlide()">Suivant →</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function generateQRCodes() {
+            const baseUrl = window.location.href.split('?')[0].replace('index.html', '');
+
+            try {
+                new QRCode(document.getElementById('qr1'), {
+                    text: baseUrl + 'planificateur_evaluations.html',
+                    width: 120,
+                    height: 120,
+                    colorDark: "#d9a8d9",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.H
+                });
+
+                new QRCode(document.getElementById('qr2'), {
+                    text: baseUrl + 'boite_idees.html',
+                    width: 120,
+                    height: 120,
+                    colorDark: "#5ba3d0",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.H
+                });
+            } catch (e) {
+                console.log('QR Code generation error:', e);
+            }
+        }
+
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        document.getElementById('totalSlides').textContent = totalSlides;
+
+        function openSlideshow() {
+            document.getElementById('slideshowModal').style.display = 'block';
+            currentSlide = 0;
+            showSlide(currentSlide);
+        }
+
+        function closeSlideshow() {
+            document.getElementById('slideshowModal').style.display = 'none';
+        }
+
+        function showSlide(n) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            if (n >= totalSlides) currentSlide = 0;
+            if (n < 0) currentSlide = totalSlides - 1;
+            slides[currentSlide].classList.add('active');
+            document.getElementById('currentSlide').textContent = currentSlide + 1;
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            showSlide(currentSlide);
+        }
+
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+            showSlide(currentSlide);
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (document.getElementById('slideshowModal').style.display === 'block') {
+                if (e.key === 'ArrowRight') nextSlide();
+                if (e.key === 'ArrowLeft') prevSlide();
+                if (e.key === 'Escape') closeSlideshow();
+            }
+        });
+
+        setTimeout(generateQRCodes, 500);
+    </script>
+</body>
+</html>
