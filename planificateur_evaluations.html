@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radar des Contrôles</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 36px;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-weight: 900;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .form-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .form-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .evaluations-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .evaluations-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        .eval-item {
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .eval-info {
+            flex: 1;
+        }
+
+        .eval-subject {
+            font-size: 16px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .eval-detail {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 3px;
+        }
+
+        .eval-status {
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-align: center;
+            min-width: 80px;
+        }
+
+        .status-normal {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-charged {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-heavy {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .eval-actions {
+            margin-left: 15px;
+        }
+
+        .delete-btn {
+            background: #dc3545;
+            padding: 8px 15px;
+            font-size: 12px;
+            border-radius: 6px;
+        }
+
+        .delete-btn:hover {
+            background: #c82333;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .eval-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .eval-actions {
+                margin-left: 0;
+                margin-top: 15px;
+                width: 100%;
+            }
+
+            .delete-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 Radar des Contrôles</h1>
+            <p>Enregistrez les évaluations pour mieux gérer la charge de travail</p>
+        </div>
+
+        <div class="form-section">
+            <h2>➕ Ajouter une Évaluation</h2>
+            <form id="evalForm">
+                <div class="form-group">
+                    <label for="subject">Matière</label>
+                    <input type="text" id="subject" placeholder="Exemple: Mathématiques" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="type">Type d'évaluation</label>
+                        <select id="type" required>
+                            <option value="">Sélectionne un type</option>
+                            <option value="Contrôle">Contrôle</option>
+                            <option value="Devoir">Devoir</option>
+                            <option value="Présentation">Présentation</option>
+                            <option value="Projet">Projet</option>
+                            <option value="Examen">Examen</option>
+                            <option value="Autre">Autre</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="date">Date</label>
+                        <input type="date" id="date" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="chapter">Chapitre/Thème</label>
+                        <input type="text" id="chapter" placeholder="Ex: Équations du 2e degré">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="duration">Durée (en minutes)</label>
+                        <input type="number" id="duration" placeholder="Ex: 60">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="remarks">Remarques</label>
+                    <textarea id="remarks" placeholder="Notes importantes..."></textarea>
+                </div>
+
+                <button type="submit">📝 Enregistrer l'évaluation</button>
+            </form>
+        </div>
+
+        <div class="evaluations-section">
+            <h2>📋 Évaluations Enregistrées</h2>
+            <div id="evalsList">
+                <div class="empty-state">
+                    <div class="empty-state-icon">📭</div>
+                    <p>Aucune évaluation enregistrée pour le moment</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function initStorage() {
+            try {
+                localStorage.setItem('test', 'test');
+                localStorage.removeItem('test');
+                return true;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        function saveEvaluation() {
+            if (!initStorage()) {
+                alert('localStorage n\'est pas disponible. Les données ne seront pas sauvegardées.');
+                return;
+            }
+
+            const evaluation = {
+                id: Date.now(),
+                subject: document.getElementById('subject').value,
+                type: document.getElementById('type').value,
+                date: document.getElementById('date').value,
+                chapter: document.getElementById('chapter').value,
+                duration: document.getElementById('duration').value,
+                remarks: document.getElementById('remarks').value,
+                timestamp: new Date().toISOString()
+            };
+
+            try {
+                const evaluations = JSON.parse(localStorage.getItem('evaluations') || '[]');
+                evaluations.push(evaluation);
+                localStorage.setItem('evaluations', JSON.stringify(evaluations));
+                
+                document.getElementById('evalForm').reset();
+                displayEvaluations();
+                alert('✅ Évaluation enregistrée !');
+            } catch (e) {
+                alert('Erreur lors de la sauvegarde: ' + e.message);
+            }
+        }
+
+        function displayEvaluations() {
+            if (!initStorage()) {
+                document.getElementById('evalsList').innerHTML = '<div class="empty-state"><p>Impossible de charger les données</p></div>';
+                return;
+            }
+
+            try {
+                const evaluations = JSON.parse(localStorage.getItem('evaluations') || '[]');
+                const container = document.getElementById('evalsList');
+
+                if (evaluations.length === 0) {
+                    container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📭</div><p>Aucune évaluation enregistrée</p></div>';
+                    return;
+                }
+
+                evaluations.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+                container.innerHTML = evaluations.map(eval => {
+                    const evalDate = new Date(eval.date);
+                    const today = new Date();
+                    const daysUntil = Math.ceil((evalDate - today) / (1000 * 60 * 60 * 24));
+                    
+                    let status = 'normal';
+                    let statusText = '✅ Normal';
+                    if (daysUntil < 3 && daysUntil >= 0) {
+                        status = 'heavy';
+                        statusText = '🔴 Imminent';
+                    } else if (daysUntil < 7) {
+                        status = 'charged';
+                        statusText = '🟠 Chargé';
+                    }
+
+                    return `
+                        <div class="eval-item">
+                            <div class="eval-info">
+                                <div class="eval-subject">${eval.subject}</div>
+                                <div class="eval-detail"><strong>Type:</strong> ${eval.type}</div>
+                                <div class="eval-detail"><strong>Date:</strong> ${new Date(eval.date).toLocaleDateString('fr-FR')}</div>
+                                ${eval.chapter ? `<div class="eval-detail"><strong>Chapitre:</strong> ${eval.chapter}</div>` : ''}
+                                ${eval.duration ? `<div class="eval-detail"><strong>Durée:</strong> ${eval.duration} min</div>` : ''}
+                                ${eval.remarks ? `<div class="eval-detail"><strong>Remarques:</strong> ${eval.remarks}</div>` : ''}
+                            </div>
+                            <div class="eval-status status-${status}">${statusText}</div>
+                            <div class="eval-actions">
+                                <button class="delete-btn" onclick="deleteEvaluation(${eval.id})">Supprimer</button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } catch (e) {
+                console.error('Error displaying evaluations:', e);
+            }
+        }
+
+        function deleteEvaluation(id) {
+            if (!confirm('Supprimer cette évaluation ?')) return;
+
+            try {
+                const evaluations = JSON.parse(localStorage.getItem('evaluations') || '[]');
+                const filtered = evaluations.filter(e => e.id !== id);
+                localStorage.setItem('evaluations', JSON.stringify(filtered));
+                displayEvaluations();
+            } catch (e) {
+                alert('Erreur: ' + e.message);
+            }
+        }
+
+        document.getElementById('evalForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            saveEvaluation();
+        });
+
+        window.addEventListener('load', displayEvaluations);
+    </script>
+</body>
+</html>

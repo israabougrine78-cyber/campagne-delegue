@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boîte à Idées</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 36px;
+            color: #f5576c;
+            margin-bottom: 10px;
+            font-weight: 900;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .form-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .form-section h2 {
+            color: #f5576c;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #f5576c;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+            margin: 0;
+        }
+
+        .checkbox-group label {
+            margin: 0;
+            font-size: 14px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(245, 87, 108, 0.4);
+        }
+
+        .feedback-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .feedback-section h2 {
+            color: #f5576c;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        .feedback-item {
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #f5576c;
+            margin-bottom: 15px;
+        }
+
+        .feedback-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .feedback-category {
+            display: inline-block;
+            background: #f5576c;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .feedback-anonymous {
+            display: inline-block;
+            background: #e0e0e0;
+            color: #666;
+            padding: 3px 10px;
+            border-radius: 3px;
+            font-size: 11px;
+            margin-left: 10px;
+        }
+
+        .feedback-message {
+            color: #333;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .feedback-meta {
+            color: #999;
+            font-size: 12px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .feedback-item {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💭 Boîte à Idées</h1>
+            <p>Partage tes idées, suggestions et problèmes - Anonyme ou pas</p>
+        </div>
+
+        <div class="form-section">
+            <h2>✍️ Soumettre une Idée</h2>
+            <form id="feedbackForm">
+                <div class="form-group">
+                    <label for="category">Catégorie</label>
+                    <select id="category" required>
+                        <option value="">Sélectionne une catégorie</option>
+                        <option value="travail">📚 Travail - Charge/Évaluations</option>
+                        <option value="classe">🏫 Classe - Ambiance/Ambiance</option>
+                        <option value="idee">💡 Idée - Projets/Événements</option>
+                        <option value="probleme">⚠️ Problème - Souci/Conflit</option>
+                        <option value="autre">❓ Autre</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="message">Ton message</label>
+                    <textarea id="message" placeholder="Écris ton idée, suggestion ou problème..." required></textarea>
+                </div>
+
+                <div class="form-group checkbox-group">
+                    <input type="checkbox" id="anonymous" checked>
+                    <label for="anonymous">🤐 Soumettre anonymement (recommandé)</label>
+                </div>
+
+                <button type="submit">📮 Envoyer à la boîte à idées</button>
+            </form>
+        </div>
+
+        <div class="feedback-section">
+            <h2>📋 Idées Reçues</h2>
+            <div id="feedbackList">
+                <div class="empty-state">
+                    <div class="empty-state-icon">📭</div>
+                    <p>Aucune idée reçue pour le moment</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function initStorage() {
+            try {
+                localStorage.setItem('test', 'test');
+                localStorage.removeItem('test');
+                return true;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        function saveFeedback() {
+            if (!initStorage()) {
+                alert('localStorage n\'est pas disponible. Les données ne seront pas sauvegardées.');
+                return;
+            }
+
+            const feedback = {
+                id: Date.now(),
+                category: document.getElementById('category').value,
+                message: document.getElementById('message').value,
+                anonymous: document.getElementById('anonymous').checked,
+                timestamp: new Date().toISOString()
+            };
+
+            try {
+                const feedbacks = JSON.parse(localStorage.getItem('feedbacks') || '[]');
+                feedbacks.push(feedback);
+                localStorage.setItem('feedbacks', JSON.stringify(feedbacks));
+                
+                document.getElementById('feedbackForm').reset();
+                document.getElementById('anonymous').checked = true;
+                displayFeedback();
+                alert('✅ Merci pour ton idée !');
+            } catch (e) {
+                alert('Erreur lors de la sauvegarde: ' + e.message);
+            }
+        }
+
+        function displayFeedback() {
+            if (!initStorage()) {
+                document.getElementById('feedbackList').innerHTML = '<div class="empty-state"><p>Impossible de charger les données</p></div>';
+                return;
+            }
+
+            try {
+                const feedbacks = JSON.parse(localStorage.getItem('feedbacks') || '[]');
+                const container = document.getElementById('feedbackList');
+
+                if (feedbacks.length === 0) {
+                    container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📭</div><p>Aucune idée reçue</p></div>';
+                    return;
+                }
+
+                feedbacks.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+                container.innerHTML = feedbacks.map(fb => {
+                    const categoryEmojis = {
+                        'travail': '📚',
+                        'classe': '🏫',
+                        'idee': '💡',
+                        'probleme': '⚠️',
+                        'autre': '❓'
+                    };
+
+                    return `
+                        <div class="feedback-item">
+                            <div class="feedback-header">
+                                <span class="feedback-category">${categoryEmojis[fb.category] || '❓'} ${fb.category}</span>
+                                ${fb.anonymous ? '<span class="feedback-anonymous">🤐 Anonyme</span>' : ''}
+                            </div>
+                            <div class="feedback-message">${fb.message}</div>
+                            <div class="feedback-meta">${new Date(fb.timestamp).toLocaleString('fr-FR')}</div>
+                        </div>
+                    `;
+                }).join('');
+            } catch (e) {
+                console.error('Error displaying feedback:', e);
+            }
+        }
+
+        document.getElementById('feedbackForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            saveFeedback();
+        });
+
+        window.addEventListener('load', displayFeedback);
+    </script>
+</body>
+</html>
